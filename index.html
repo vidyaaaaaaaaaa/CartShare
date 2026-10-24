@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CartShare – Collaborative Shopping Cart</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+</head>
+<body class="bg-surface">
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar navbar-expand-lg navbar-dark bg-purple-gradient sticky-top shadow-sm py-2 py-md-3">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="#" id="brand-link">
+        <div class="brand-icon-wrapper">
+          <i class="bi bi-cart4 text-purple fs-4"></i>
+        </div>
+        <span class="fs-4 tracking-tight">Cart<span class="text-lavender-accent">Share</span></span>
+      </a>
+
+      <!-- Right Header Actions (Shown when in a room) -->
+      <div id="nav-room-info" class="d-none d-flex align-items-center gap-2 gap-md-3 ms-auto">
+        <div class="live-sync-badge d-none d-sm-flex align-items-center gap-2 px-3 py-1 rounded-pill">
+          <span class="pulse-dot"></span>
+          <span class="small fw-semibold text-white-50">Multi-Tab Sync Active</span>
+        </div>
+
+        <div class="user-chip d-flex align-items-center gap-2 px-3 py-1 rounded-pill">
+          <div class="user-avatar-circle" id="nav-user-avatar">?</div>
+          <span class="small fw-medium text-white text-truncate" style="max-width: 120px;" id="nav-user-name">User</span>
+        </div>
+
+        <button id="btn-leave-room" class="btn btn-sm btn-outline-light rounded-pill px-3 py-1 d-flex align-items-center gap-1 shadow-sm" title="Exit to Welcome Screen">
+          <i class="bi bi-box-arrow-right"></i>
+          <span class="d-none d-md-inline">Leave Room</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Application Container -->
+  <main class="container my-4 my-md-5">
+
+    <!-- ========================================== -->
+    <!-- VIEW 1: WELCOME / JOIN / CREATE ROOM VIEW  -->
+    <!-- ========================================== -->
+    <section id="welcome-view" class="view-section">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-7">
+          
+          <!-- Welcome Hero Card -->
+          <div class="card border-0 shadow-lg welcome-card overflow-hidden mb-4">
+            <div class="card-body p-4 p-md-5 text-center position-relative">
+              <div class="hero-decoration-circle circle-1"></div>
+              <div class="hero-decoration-circle circle-2"></div>
+              
+              <div class="welcome-icon-box mx-auto mb-3 shadow-sm">
+                <i class="bi bi-people-fill fs-1 text-purple"></i>
+              </div>
+              <h1 class="h2 fw-bold text-dark mb-2">Shop Together in Real-Time</h1>
+              <p class="text-secondary mb-4 mx-auto" style="max-width: 480px;">
+                Collaborate on grocery lists and shared shopping carts with roommates, friends, or family. Changes sync automatically across tabs!
+              </p>
+
+              <!-- Step 1: User Identity Input -->
+              <div class="user-name-wrapper p-3 p-md-4 rounded-4 mb-4 bg-light-purple text-start">
+                <label for="input-user-name" class="form-label fw-bold text-dark d-flex align-items-center gap-2 mb-2">
+                  <i class="bi bi-person-badge-fill text-purple"></i> Your Name or Nickname <span class="text-danger">*</span>
+                </label>
+                <div class="input-group input-group-lg">
+                  <span class="input-group-text bg-white border-end-0 text-muted">
+                    <i class="bi bi-person"></i>
+                  </span>
+                  <input type="text" class="form-control border-start-0 ps-0" id="input-user-name" placeholder="e.g. Priya, Alex, Rahul" maxlength="25" autocomplete="name" required>
+                </div>
+                <div class="invalid-feedback d-block text-danger small mt-1 d-none" id="name-error-msg">
+                  Please enter your name to continue.
+                </div>
+              </div>
+
+              <!-- Step 2: Choose Create Room or Join Room -->
+              <div class="row g-3">
+                
+                <!-- Create Room Card -->
+                <div class="col-12 col-md-6">
+                  <div class="action-card h-100 p-4 rounded-4 border d-flex flex-column justify-content-between text-start">
+                    <div>
+                      <div class="action-icon text-purple bg-lavender-subtle mb-3">
+                        <i class="bi bi-plus-circle-fill fs-3"></i>
+                      </div>
+                      <h3 class="h5 fw-bold text-dark mb-1">Create a Room</h3>
+                      <p class="text-muted small mb-3">Start a brand new shared cart and invite friends with a code.</p>
+                    </div>
+                    <button class="btn btn-purple btn-lg w-100 rounded-pill fw-semibold shadow-sm mt-2 d-flex align-items-center justify-content-center gap-2" id="btn-create-room">
+                      <span>Create New Room</span>
+                      <i class="bi bi-arrow-right"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Join Room Card -->
+                <div class="col-12 col-md-6">
+                  <div class="action-card h-100 p-4 rounded-4 border d-flex flex-column justify-content-between text-start">
+                    <div>
+                      <div class="action-icon text-purple bg-lavender-subtle mb-3">
+                        <i class="bi bi-door-open-fill fs-3"></i>
+                      </div>
+                      <h3 class="h5 fw-bold text-dark mb-1">Join with Code</h3>
+                      <p class="text-muted small mb-2">Enter an existing room code shared by your friend.</p>
+                      
+                      <div class="form-group mb-2">
+                        <input type="text" class="form-control text-uppercase tracking-wider fw-bold text-center py-2" id="input-join-code" placeholder="e.g. CART-742" maxlength="12" autocomplete="off">
+                      </div>
+                    </div>
+                    <button class="btn btn-outline-purple btn-lg w-100 rounded-pill fw-semibold mt-2 d-flex align-items-center justify-content-center gap-2" id="btn-join-room">
+                      <span>Join Room</span>
+                      <i class="bi bi-box-arrow-in-right"></i>
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Quick Demo Helper Note -->
+              <div class="alert alert-purple mt-4 mb-0 text-start d-flex align-items-start gap-3 rounded-4 p-3">
+                <i class="bi bi-info-circle-fill text-purple fs-4 mt-1"></i>
+                <div class="small">
+                  <strong class="d-block text-dark">Testing Multi-Tab Real-time Collaboration:</strong>
+                  Create a room here, then copy the URL or Room Code and open it in a <strong>second browser tab or private window</strong> with a different name. Watch items, edits, and activities synchronize instantly!
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Recent Rooms Visited On This Device -->
+          <div id="recent-rooms-container" class="card border-0 shadow-sm rounded-4 p-4 d-none">
+            <h6 class="fw-bold text-secondary text-uppercase tracking-wider small mb-3 d-flex align-items-center gap-2">
+              <i class="bi bi-clock-history text-purple"></i> Recent Rooms on this Device
+            </h6>
+            <div id="recent-rooms-list" class="d-flex flex-wrap gap-2">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW 2: ACTIVE SHOPPING ROOM VIEW          -->
+    <!-- ========================================== -->
+    <section id="room-view" class="view-section d-none">
+      
+      <!-- Room Header Banner -->
+      <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden room-banner-card">
+        <div class="card-body p-3 p-md-4">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            
+            <!-- Left Info -->
+            <div>
+              <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                <span class="badge bg-purple-subtle text-purple px-2 py-1 rounded-pill fw-semibold small">
+                  <i class="bi bi-cart-check-fill me-1"></i> Shared Cart Room
+                </span>
+                <span class="badge bg-success-subtle text-success px-2 py-1 rounded-pill fw-medium small">
+                  <span class="pulse-dot-inline me-1"></span> Live Sync Ready
+                </span>
+              </div>
+              <div class="d-flex align-items-center gap-3 flex-wrap">
+                <h2 class="h3 fw-bolder text-dark mb-0 d-flex align-items-center gap-2">
+                  <span class="room-code-display" id="display-room-code">CART-XXXX</span>
+                </h2>
+                <div class="btn-group btn-group-sm">
+                  <button class="btn btn-outline-purple btn-sm rounded-start-pill px-3" id="btn-copy-code" title="Copy Room Code">
+                    <i class="bi bi-clipboard me-1"></i> Copy Code
+                  </button>
+                  <button class="btn btn-outline-purple btn-sm rounded-end-pill px-3" id="btn-share-link" title="Copy Invite Link">
+                    <i class="bi bi-share me-1"></i> Share Link
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Controls: Quick Actions -->
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <button class="btn btn-purple rounded-pill px-3 py-2 fw-semibold shadow-sm d-flex align-items-center gap-2" id="btn-open-receipt-top">
+                <i class="bi bi-receipt"></i>
+                <span>View Receipt / Bill</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Free Delivery Progress Bar (₹1,000 Threshold) -->
+        <div class="delivery-threshold-container px-3 px-md-4 py-3 bg-light-purple border-top">
+          <div class="d-flex justify-content-between align-items-center mb-1 flex-wrap gap-2">
+            <span class="small fw-bold text-dark d-flex align-items-center gap-2" id="delivery-status-text">
+              <i class="bi bi-truck text-purple fs-5"></i>
+              <span>Add items to unlock <strong>FREE Delivery</strong></span>
+            </span>
+            <span class="small fw-bolder text-purple" id="delivery-progress-percent">0%</span>
+          </div>
+          <div class="progress rounded-pill shadow-inner" style="height: 12px;">
+            <div class="progress-bar progress-bar-striped progress-bar-animated bg-purple-gradient-bar" id="delivery-progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="1000"></div>
+          </div>
+          <div class="d-flex justify-content-between small text-muted mt-1">
+            <span>₹0</span>
+            <span class="fw-semibold text-purple">Free Delivery Goal: ₹1,000</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Room Grid: Cart (Left 7-8 cols) & Add/Activity (Right 4-5 cols) -->
+      <div class="row g-4">
+        
+        <!-- LEFT COLUMN: CART ITEMS & SUMMARY -->
+        <div class="col-12 col-lg-7 col-xl-8">
+          
+          <!-- Shared Cart Card -->
+          <div class="card border-0 shadow-sm rounded-4 mb-4">
+            <div class="card-header bg-white border-0 pt-4 px-4 pb-2 d-flex justify-content-between align-items-center flex-wrap gap-2">
+              <div>
+                <h3 class="h5 fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                  <i class="bi bi-basket2-fill text-purple"></i>
+                  <span>Shared Cart Items</span>
+                  <span class="badge bg-purple rounded-pill text-white ms-1" id="cart-item-count-badge">0</span>
+                </h3>
+                <p class="text-muted small mb-0">Items added by anyone in this room show up here in real time.</p>
+              </div>
+
+              <!-- Search/Filter or Clear Cart -->
+              <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-sm btn-outline-danger rounded-pill px-3" id="btn-clear-cart" title="Clear All Cart Items">
+                  <i class="bi bi-trash3 me-1"></i> Clear Cart
+                </button>
+              </div>
+            </div>
+
+            <!-- Cart Filter Pills -->
+            <div class="px-4 py-2 border-bottom d-flex align-items-center gap-2 overflow-auto" id="category-filter-bar">
+              <button class="btn btn-xs category-filter-btn active rounded-pill px-3 py-1 text-nowrap" data-category="ALL">All Items</button>
+              <button class="btn btn-xs category-filter-btn rounded-pill px-3 py-1 text-nowrap" data-category="Groceries">Groceries</button>
+              <button class="btn btn-xs category-filter-btn rounded-pill px-3 py-1 text-nowrap" data-category="Snacks">Snacks</button>
+              <button class="btn btn-xs category-filter-btn rounded-pill px-3 py-1 text-nowrap" data-category="Dairy">Dairy</button>
+              <button class="btn btn-xs category-filter-btn rounded-pill px-3 py-1 text-nowrap" data-category="Beverages">Beverages</button>
+              <button class="btn btn-xs category-filter-btn rounded-pill px-3 py-1 text-nowrap" data-category="Household">Household</button>
+              <button class="btn btn-xs category-filter-btn rounded-pill px-3 py-1 text-nowrap" data-category="Other">Other</button>
+            </div>
+
+            <div class="card-body p-3 p-md-4">
+              <!-- Empty Cart State -->
+              <div id="cart-empty-state" class="text-center py-5">
+                <div class="empty-icon-circle mx-auto mb-3">
+                  <i class="bi bi-cart-x text-purple fs-1"></i>
+                </div>
+                <h4 class="h5 fw-bold text-dark mb-1">Your Shared Cart is Empty</h4>
+                <p class="text-muted small mb-3 mx-auto" style="max-width: 340px;">
+                  No items have been added yet. Use the form on the right to add your groceries, snacks, or split essentials!
+                </p>
+                <a href="#input-item-name" class="btn btn-sm btn-purple rounded-pill px-4 py-2">
+                  <i class="bi bi-plus-lg me-1"></i> Add First Item
+                </a>
+              </div>
+
+              <!-- Cart Items List Container -->
+              <div id="cart-items-list" class="d-none">
+                <!-- Dynamically generated item cards -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Order Summary & Bill Splitter Card -->
+          <div class="card border-0 shadow-sm rounded-4 mb-4 summary-card">
+            <div class="card-body p-4">
+              <h4 class="h5 fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+                <i class="bi bi-calculator-fill text-purple"></i> Cart Summary & Calculation
+              </h4>
+
+              <div class="row g-4">
+                <!-- Cost Math Breakdown -->
+                <div class="col-12 col-md-6 border-end-md">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="text-secondary">Subtotal (<span id="summary-total-qty">0</span> units)</span>
+                    <span class="fw-semibold text-dark" id="summary-subtotal">₹0.00</span>
+                  </div>
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="text-secondary d-flex align-items-center gap-1">
+                      Delivery Fee
+                      <i class="bi bi-info-circle text-muted" title="Free for orders ₹1,000 and above" data-bs-toggle="tooltip"></i>
+                    </span>
+                    <span id="summary-delivery-fee" class="fw-semibold">₹50.00</span>
+                  </div>
+                  <div class="d-flex justify-content-between mb-3 text-success d-none" id="summary-discount-row">
+                    <span>Free Delivery Discount</span>
+                    <span class="fw-semibold">-₹50.00</span>
+                  </div>
+                  <hr class="my-2">
+                  <div class="d-flex justify-content-between align-items-center pt-2">
+                    <div>
+                      <span class="h5 fw-bold text-dark mb-0 d-block">Grand Total</span>
+                      <small class="text-muted">Includes all taxes</small>
+                    </div>
+                    <span class="h3 fw-bolder text-purple mb-0" id="summary-grand-total">₹0.00</span>
+                  </div>
+                </div>
+
+                <!-- Roommate Splitter Breakdown -->
+                <div class="col-12 col-md-6">
+                  <div class="bg-light-purple p-3 rounded-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <span class="small fw-bold text-dark d-flex align-items-center gap-1">
+                        <i class="bi bi-pie-chart-fill text-purple"></i> Roommate Bill Split
+                      </span>
+                      <div class="d-flex align-items-center gap-1">
+                        <label for="split-member-count" class="small text-muted mb-0">Split:</label>
+                        <select id="split-member-count" class="form-select form-select-sm border-0 py-0 ps-2 pe-4 fw-bold text-purple" style="width: auto;">
+                          <option value="1">1 Person</option>
+                          <option value="2" selected>2 People</option>
+                          <option value="3">3 People</option>
+                          <option value="4">4 People</option>
+                          <option value="5">5 People</option>
+                          <option value="6">6 People</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="p-2 bg-white rounded-3 mb-2 text-center">
+                      <span class="small text-muted d-block">Equal Share Per Person</span>
+                      <span class="h5 fw-bold text-purple mb-0" id="summary-per-person">₹0.00</span>
+                    </div>
+
+                    <!-- Contribution breakdown by shopper -->
+                    <div class="small mt-2">
+                      <span class="fw-semibold text-dark d-block mb-1">Items added by shopper:</span>
+                      <div id="shopper-contribution-list" class="d-flex flex-column gap-1">
+                        <!-- Populated dynamically -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bottom Action Bar inside Summary -->
+              <div class="pt-4 mt-2 border-top d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3">
+                <span class="small text-muted">
+                  <i class="bi bi-shield-check text-success me-1"></i> Stored in local browser memory. No backend required!
+                </span>
+                <button class="btn btn-purple btn-lg rounded-pill px-4 fw-semibold shadow-sm w-100 w-sm-auto d-flex align-items-center justify-content-center gap-2" id="btn-generate-receipt">
+                  <i class="bi bi-receipt-cutoff"></i>
+                  <span>Generate & Print Receipt</span>
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN: ADD ITEM FORM & ACTIVITY LOG -->
+        <div class="col-12 col-lg-5 col-xl-4">
+          
+          <!-- Card 1: Add Item Form -->
+          <div class="card border-0 shadow-sm rounded-4 mb-4 add-item-card sticky-lg-top" style="top: 85px; z-index: 10;">
+            <div class="card-header bg-white border-0 pt-4 px-4 pb-2">
+              <h3 class="h5 fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                <i class="bi bi-plus-circle-fill text-purple"></i> Add Item to Shared Cart
+              </h3>
+              <p class="text-muted small mb-0">Specify item details, price, and initial quantity.</p>
+            </div>
+            
+            <div class="card-body p-4">
+              <form id="add-item-form" novalidate>
+                
+                <!-- Item Name -->
+                <div class="mb-3">
+                  <label for="input-item-name" class="form-label fw-semibold small text-dark">
+                    Item Name <span class="text-danger">*</span>
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-muted">
+                      <i class="bi bi-tag"></i>
+                    </span>
+                    <input type="text" class="form-control border-start-0 ps-0" id="input-item-name" placeholder="e.g. Organic Milk, Maggi, Bread" maxlength="40" required autocomplete="off">
+                  </div>
+                  <div class="invalid-feedback small" id="item-name-error">Please provide a valid item name.</div>
+
+                  <!-- Quick suggestions chips -->
+                  <div class="mt-2 d-flex flex-wrap gap-1 align-items-center">
+                    <span class="text-muted small" style="font-size: 0.75rem;">Suggestions:</span>
+                    <button type="button" class="btn btn-xs quick-chip" data-name="Milk" data-price="60" data-cat="Dairy">🥛 Milk</button>
+                    <button type="button" class="btn btn-xs quick-chip" data-name="Eggs (12pk)" data-price="90" data-cat="Dairy">🥚 Eggs</button>
+                    <button type="button" class="btn btn-xs quick-chip" data-name="Bread" data-price="45" data-cat="Groceries">🍞 Bread</button>
+                    <button type="button" class="btn btn-xs quick-chip" data-name="Coffee" data-price="180" data-cat="Beverages">☕ Coffee</button>
+                    <button type="button" class="btn btn-xs quick-chip" data-name="Chips" data-price="30" data-cat="Snacks">🥔 Chips</button>
+                  </div>
+                </div>
+
+                <!-- Category -->
+                <div class="mb-3">
+                  <label for="select-item-category" class="form-label fw-semibold small text-dark">
+                    Category
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-muted">
+                      <i class="bi bi-grid"></i>
+                    </span>
+                    <select class="form-select border-start-0 ps-0" id="select-item-category">
+                      <option value="Groceries" selected>Groceries</option>
+                      <option value="Snacks">Snacks & Munchies</option>
+                      <option value="Dairy">Dairy & Eggs</option>
+                      <option value="Beverages">Beverages & Drinks</option>
+                      <option value="Household">Household & Essentials</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Price & Quantity Row -->
+                <div class="row g-2 mb-3">
+                  <!-- Price -->
+                  <div class="col-6">
+                    <label for="input-item-price" class="form-label fw-semibold small text-dark">
+                      Price (₹) <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-light border-end-0 fw-bold text-purple">₹</span>
+                      <input type="number" class="form-control border-start-0 ps-0" id="input-item-price" placeholder="0.00" min="1" max="100000" step="any" required>
+                    </div>
+                    <div class="invalid-feedback small" id="item-price-error">Price must be &gt; 0</div>
+                  </div>
+
+                  <!-- Quantity -->
+                  <div class="col-6">
+                    <label for="input-item-qty" class="form-label fw-semibold small text-dark">
+                      Quantity <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group">
+                      <button type="button" class="btn btn-light border" id="btn-qty-minus">-</button>
+                      <input type="number" class="form-control text-center fw-bold" id="input-item-qty" value="1" min="1" max="99" required>
+                      <button type="button" class="btn btn-light border" id="btn-qty-plus">+</button>
+                    </div>
+                    <div class="invalid-feedback small" id="item-qty-error">Min 1</div>
+                  </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-purple btn-lg w-100 rounded-pill fw-semibold shadow-sm d-flex align-items-center justify-content-center gap-2 mt-3" id="btn-add-item">
+                  <i class="bi bi-cart-plus-fill"></i>
+                  <span>Add to Shared Cart</span>
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Card 2: Live Activity Log -->
+          <div class="card border-0 shadow-sm rounded-4 mb-4 activity-card">
+            <div class="card-header bg-white border-0 pt-4 px-4 pb-2 d-flex justify-content-between align-items-center">
+              <div>
+                <h3 class="h5 fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                  <i class="bi bi-activity text-purple"></i> Activity Stream
+                </h3>
+                <p class="text-muted small mb-0">Live audit log of all room changes.</p>
+              </div>
+              <button class="btn btn-link text-muted p-0 small text-decoration-none" id="btn-clear-logs" title="Clear logs">
+                Clear
+              </button>
+            </div>
+
+            <div class="card-body p-3 p-md-4">
+              <div id="activity-log-list" class="activity-timeline">
+                <!-- Dynamically populated activities -->
+              </div>
+              <div id="activity-empty-state" class="text-center py-4 text-muted small d-none">
+                <i class="bi bi-clock-history fs-3 d-block mb-1 text-purple-subtle"></i>
+                No actions recorded yet.
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- MODAL: PRINTABLE RECEIPT PREVIEW           -->
+  <!-- ========================================== -->
+  <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+      <div class="modal-content rounded-4 border-0 shadow-lg">
+        
+        <div class="modal-header border-0 pb-0 no-print">
+          <h5 class="modal-title fw-bold text-dark" id="receiptModalLabel">
+            <i class="bi bi-receipt text-purple me-1"></i> Shopping Receipt Preview
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body p-4">
+          <!-- ACTUAL PRINTABLE RECEIPT CONTAINER -->
+          <div id="printable-receipt" class="printable-receipt-card bg-white p-4 rounded-3 border">
+            
+            <!-- Receipt Header -->
+            <div class="text-center border-bottom pb-3 mb-3">
+              <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
+                <i class="bi bi-cart4 text-purple fs-3"></i>
+                <h2 class="h4 fw-bolder mb-0 text-dark">CartShare Supermarket</h2>
+              </div>
+              <p class="small text-muted mb-1">Collaborative Shopping Receipt & Bill</p>
+              <div class="d-flex justify-content-center gap-3 small text-secondary flex-wrap">
+                <span><strong>Room:</strong> <span id="receipt-room-code">CART-XXXX</span></span>
+                <span>•</span>
+                <span><strong>Date:</strong> <span id="receipt-date">Oct 24, 2026</span></span>
+                <span>•</span>
+                <span><strong>Printed By:</strong> <span id="receipt-user-name">User</span></span>
+              </div>
+            </div>
+
+            <!-- Receipt Items Table -->
+            <div class="table-responsive mb-3">
+              <table class="table table-sm align-middle">
+                <thead class="table-light">
+                  <tr class="small text-uppercase tracking-wider">
+                    <th scope="col" style="width: 5%">#</th>
+                    <th scope="col" style="width: 45%">Item Description</th>
+                    <th scope="col" class="text-center" style="width: 15%">Qty</th>
+                    <th scope="col" class="text-end" style="width: 15%">Price</th>
+                    <th scope="col" class="text-end" style="width: 20%">Amount</th>
+                  </tr>
+                </thead>
+                <tbody id="receipt-table-body" class="small">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Receipt Financial Calculations -->
+            <div class="row justify-content-end mb-3">
+              <div class="col-12 col-sm-7 col-md-6">
+                <div class="d-flex justify-content-between small py-1">
+                  <span class="text-muted">Subtotal (<span id="receipt-total-items">0</span> items):</span>
+                  <span class="fw-semibold" id="receipt-subtotal">₹0.00</span>
+                </div>
+                <div class="d-flex justify-content-between small py-1">
+                  <span class="text-muted">Delivery Charges:</span>
+                  <span class="fw-semibold" id="receipt-delivery">₹0.00</span>
+                </div>
+                <div class="d-flex justify-content-between small py-1 text-success d-none" id="receipt-discount-row">
+                  <span>Free Delivery Discount:</span>
+                  <span class="fw-semibold">-₹50.00</span>
+                </div>
+                <hr class="my-2">
+                <div class="d-flex justify-content-between align-items-center py-1">
+                  <span class="fw-bolder fs-6">Grand Total:</span>
+                  <span class="fw-bolder fs-5 text-purple" id="receipt-grand-total">₹0.00</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Shopper Breakdown on Receipt -->
+            <div class="border-top pt-3 mb-3">
+              <h6 class="small fw-bold text-uppercase text-secondary tracking-wider mb-2">Member Contributions & Split</h6>
+              <div id="receipt-split-details" class="small text-muted row g-2">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Receipt Footer / Barcode decoration -->
+            <div class="text-center pt-3 border-top">
+              <div class="barcode-decorative mx-auto mb-2"></div>
+              <p class="small text-muted mb-0">Thank you for using CartShare! • Keep this receipt for room expense splitting.</p>
+              <small class="text-black-50" style="font-size: 0.7rem;">CartShare College Project • Built with HTML, CSS & Vanilla JS</small>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="modal-footer border-0 pt-0 no-print">
+          <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-purple rounded-pill px-4 fw-semibold shadow-sm d-flex align-items-center gap-2" id="btn-print-receipt">
+            <i class="bi bi-printer-fill"></i>
+            <span>Print Receipt</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: CONFIRM CLEAR CART                  -->
+  <!-- ========================================== -->
+  <div class="modal fade" id="clearCartModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content rounded-4 border-0 shadow">
+        <div class="modal-body p-4 text-center">
+          <div class="text-danger fs-1 mb-2">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+          </div>
+          <h5 class="fw-bold text-dark mb-2">Clear Shared Cart?</h5>
+          <p class="small text-muted mb-4">
+            This will remove all items from this room for every participant. This action cannot be undone.
+          </p>
+          <div class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-light rounded-pill px-3" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-danger rounded-pill px-3 fw-semibold" id="btn-confirm-clear-cart">Yes, Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- TOAST NOTIFICATION CONTAINER (Floating)    -->
+  <!-- ========================================== -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3 no-print" style="z-index: 1090;">
+    <div id="app-toast" class="toast align-items-center text-white bg-dark border-0 rounded-4 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body d-flex align-items-center gap-2" id="app-toast-msg">
+          <i class="bi bi-check-circle-fill text-success fs-5"></i>
+          <span>Notification message</span>
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white border-top py-4 mt-5 no-print">
+    <div class="container text-center">
+      <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
+        <i class="bi bi-cart4 text-purple"></i>
+        <span class="fw-bold text-dark">CartShare</span>
+        <span class="badge bg-purple-subtle text-purple small">v1.0</span>
+      </div>
+      <p class="small text-muted mb-1">
+        Collaborative Shopping Cart for College Projects • 100% Vanilla JS & Browser LocalStorage Sync
+      </p>
+      <p class="small text-muted mb-0">
+        Multi-tab real-time sync with <code>window.storage</code> event listener.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 Bundle JS (Includes Popper) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <!-- Custom Application Script -->
+  <script src="js/app.js"></script>
+</body>
+</html>

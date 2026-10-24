@@ -1,0 +1,607 @@
+/* ==========================================================================
+   CartShare – Collaborative Shopping Cart
+   Custom Styling & Theme System
+   Designed with Purple Accents, Modern Cards, and Clean Typography
+   ========================================================================== */
+
+/* --- CSS Variables / Design Tokens --- */
+:root {
+  --primary-purple: #6d28d9;
+  --primary-purple-hover: #5b21b6;
+  --purple-light: #8b5cf6;
+  --purple-subtle: #ede9fe;
+  --purple-surface: #f5f3ff;
+  --lavender-accent: #c4b5fd;
+  --text-main: #1f2937;
+  --text-muted: #6b7280;
+  --card-border: #f0ecfc;
+  --card-shadow: 0 10px 25px -5px rgba(109, 40, 217, 0.07), 0 8px 10px -6px rgba(109, 40, 217, 0.05);
+  --card-shadow-hover: 0 20px 25px -5px rgba(109, 40, 217, 0.12), 0 10px 10px -5px rgba(109, 40, 217, 0.08);
+  --radius-lg: 1.25rem;
+  --radius-md: 0.85rem;
+  --radius-sm: 0.5rem;
+}
+
+/* Base Body Setup */
+body {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--text-main);
+  background-color: #f8fafc;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+/* --- Brand & Nav Styling --- */
+.bg-purple-gradient {
+  background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 100%);
+}
+
+.brand-icon-wrapper {
+  width: 40px;
+  height: 40px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.navbar-brand:hover .brand-icon-wrapper {
+  transform: scale(1.08) rotate(-4deg);
+}
+
+.text-purple {
+  color: var(--primary-purple) !important;
+}
+
+.text-lavender-accent {
+  color: var(--lavender-accent) !important;
+}
+
+.bg-purple {
+  background-color: var(--primary-purple) !important;
+  color: #ffffff !important;
+}
+
+.bg-purple-subtle {
+  background-color: var(--purple-subtle) !important;
+}
+
+.bg-light-purple {
+  background-color: var(--purple-surface) !important;
+}
+
+/* User & Sync Chips in Nav */
+.user-chip {
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.user-avatar-circle {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  color: var(--primary-purple);
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
+.live-sync-badge {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  animation: pulse-ring 1.8s infinite;
+}
+
+.pulse-dot-inline {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  animation: pulse-ring 1.8s infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+/* --- Buttons --- */
+.btn-purple {
+  background-color: var(--primary-purple);
+  border-color: var(--primary-purple);
+  color: #ffffff;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-purple:hover,
+.btn-purple:focus {
+  background-color: var(--primary-purple-hover);
+  border-color: var(--primary-purple-hover);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 15px rgba(109, 40, 217, 0.25);
+}
+
+.btn-outline-purple {
+  color: var(--primary-purple);
+  border-color: var(--lavender-accent);
+  background-color: transparent;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-purple:hover,
+.btn-outline-purple:focus {
+  background-color: var(--purple-subtle);
+  border-color: var(--primary-purple);
+  color: var(--primary-purple-hover);
+}
+
+.btn-xs {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+}
+
+/* --- Welcome Hero Card --- */
+.welcome-card {
+  border-radius: var(--radius-lg);
+  background: #ffffff;
+  border: 1px solid var(--card-border) !important;
+  box-shadow: var(--card-shadow) !important;
+}
+
+.hero-decoration-circle {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(50px);
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.circle-1 {
+  width: 250px;
+  height: 250px;
+  background-color: #c4b5fd;
+  top: -80px;
+  left: -80px;
+}
+
+.circle-2 {
+  width: 200px;
+  height: 200px;
+  background-color: #a78bfa;
+  bottom: -60px;
+  right: -60px;
+}
+
+.welcome-icon-box {
+  width: 76px;
+  height: 76px;
+  border-radius: 22px;
+  background: var(--purple-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-card {
+  background: #ffffff;
+  border-color: #e5e7eb !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.action-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 20px -5px rgba(109, 40, 217, 0.12);
+  border-color: var(--lavender-accent) !important;
+}
+
+.action-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bg-lavender-subtle {
+  background-color: #ede9fe;
+}
+
+.alert-purple {
+  background-color: #f5f3ff;
+  border: 1px solid #ddd6fe;
+  color: #4c1d95;
+}
+
+/* --- Room Screen Banner & Header --- */
+.room-banner-card {
+  border-radius: var(--radius-lg);
+  background: #ffffff;
+  border: 1px solid var(--card-border) !important;
+}
+
+.room-code-display {
+  font-family: 'Courier New', Courier, monospace;
+  letter-spacing: 2px;
+  background-color: var(--purple-subtle);
+  color: var(--primary-purple);
+  padding: 4px 12px;
+  border-radius: 10px;
+  border: 1px dashed var(--purple-light);
+}
+
+/* Free Delivery Goal Bar */
+.delivery-threshold-container {
+  border-bottom-left-radius: var(--radius-lg);
+  border-bottom-right-radius: var(--radius-lg);
+}
+
+.bg-purple-gradient-bar {
+  background: linear-gradient(90deg, #7c3aed 0%, #10b981 100%);
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.shadow-inner {
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.08);
+  background-color: #e2e8f0;
+}
+
+/* --- Category Filter Pills --- */
+.category-filter-btn {
+  background-color: #f1f5f9;
+  color: #475569;
+  border: 1px solid transparent;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.category-filter-btn:hover {
+  background-color: var(--purple-subtle);
+  color: var(--primary-purple);
+}
+
+.category-filter-btn.active {
+  background-color: var(--primary-purple);
+  color: #ffffff;
+  border-color: var(--primary-purple);
+}
+
+/* --- Shared Cart Items List --- */
+.cart-item-card {
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-bottom: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.cart-item-card:hover {
+  border-color: #ddd6fe;
+  box-shadow: 0 4px 12px rgba(109, 40, 217, 0.06);
+  transform: translateY(-1px);
+}
+
+.cart-item-card.highlight-added {
+  animation: pulse-highlight 1.5s ease;
+}
+
+@keyframes pulse-highlight {
+  0% {
+    background-color: #ede9fe;
+    border-color: #8b5cf6;
+  }
+  100% {
+    background-color: #ffffff;
+    border-color: #f1f5f9;
+  }
+}
+
+.item-cat-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 30px;
+}
+
+.badge-Groceries { background-color: #e0f2fe; color: #0369a1; }
+.badge-Snacks    { background-color: #fef3c7; color: #b45309; }
+.badge-Dairy     { background-color: #ecfdf5; color: #047857; }
+.badge-Beverages { background-color: #fae8ff; color: #86198f; }
+.badge-Household { background-color: #f3f4f6; color: #374151; }
+.badge-Other     { background-color: #ede9fe; color: #6d28d9; }
+
+.item-user-tag {
+  font-size: 0.75rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.item-user-avatar {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--primary-purple);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
+.qty-control-group {
+  display: inline-flex;
+  align-items: center;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 30px;
+  padding: 2px 4px;
+}
+
+.qty-btn {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: #ffffff;
+  color: var(--text-main);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.15s ease;
+  font-size: 0.9rem;
+}
+
+.qty-btn:hover {
+  background-color: var(--primary-purple);
+  color: #ffffff;
+}
+
+.qty-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.qty-value-display {
+  min-width: 28px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* Empty State Circle */
+.empty-icon-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background-color: var(--purple-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Quick Suggestion Chips */
+.quick-chip {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  border-radius: 12px;
+  transition: all 0.15s ease;
+}
+
+.quick-chip:hover {
+  background-color: var(--purple-subtle);
+  border-color: var(--lavender-accent);
+  color: var(--primary-purple);
+}
+
+/* --- Activity Timeline --- */
+.activity-timeline {
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.activity-timeline::-webkit-scrollbar {
+  width: 4px;
+}
+
+.activity-timeline::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 4px;
+}
+
+.activity-entry {
+  position: relative;
+  padding-left: 28px;
+  padding-bottom: 1rem;
+  border-left: 2px solid #ede9fe;
+}
+
+.activity-entry:last-child {
+  border-left-color: transparent;
+  padding-bottom: 0;
+}
+
+.activity-dot {
+  position: absolute;
+  left: -7px;
+  top: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--primary-purple);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 2px #ddd6fe;
+}
+
+.activity-dot.action-remove {
+  background-color: #ef4444;
+  box-shadow: 0 0 0 2px #fee2e2;
+}
+
+.activity-dot.action-join {
+  background-color: #10b981;
+  box-shadow: 0 0 0 2px #d1fae5;
+}
+
+.activity-time {
+  font-size: 0.72rem;
+  color: #94a3b8;
+}
+
+/* --- Receipt Component (Screen & Print) --- */
+.printable-receipt-card {
+  background: #ffffff;
+  color: #111827;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.barcode-decorative {
+  height: 32px;
+  max-width: 240px;
+  background: repeating-linear-gradient(
+    90deg,
+    #111827,
+    #111827 2px,
+    transparent 2px,
+    transparent 4px,
+    #111827 4px,
+    #111827 7px,
+    transparent 7px,
+    transparent 10px
+  );
+}
+
+/* --- Toast Custom Styling --- */
+.toast {
+  backdrop-filter: blur(10px);
+}
+
+/* ==========================================================================
+   PRINT STYLES (@media print)
+   Isolates receipt only and turns off UI elements
+   ========================================================================== */
+@media print {
+  /* Hide all interactive elements */
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    font-size: 12pt;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Hide regular body sections, headers, footer, toasts, and modals' wrapper buttons */
+  header,
+  footer,
+  #welcome-view,
+  #room-view,
+  .toast-container,
+  .no-print,
+  .modal-backdrop,
+  .btn-close,
+  .modal-header,
+  .modal-footer {
+    display: none !important;
+  }
+
+  /* Make modal take 100% full printable page without pop-up borders */
+  .modal {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: none !important;
+    padding: 0 !important;
+  }
+
+  .modal-dialog {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .modal-content {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  .modal-body {
+    padding: 0 !important;
+  }
+
+  #printable-receipt {
+    display: block !important;
+    width: 100% !important;
+    border: none !important;
+    padding: 10px 0 !important;
+  }
+
+  /* Force table borders and crisp text printing */
+  table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+  }
+
+  th, td {
+    border-bottom: 1px dashed #666666 !important;
+    padding: 6px 4px !important;
+  }
+
+  thead th {
+    border-bottom: 2px solid #000000 !important;
+    background-color: transparent !important;
+    color: #000000 !important;
+  }
+
+  /* Avoid page breaks inside table rows */
+  tr {
+    page-break-inside: avoid;
+  }
+}
