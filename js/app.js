@@ -1,12 +1,3 @@
-/**
- * CartShare – Collaborative Shopping Cart
- * Pure Vanilla JavaScript implementation with multi-tab real-time sync using localStorage.
- * No framework, no Node.js, no backend required!
- */
-
-// =============================================================================
-// 1. APPLICATION STATE & STORAGE CONFIGURATION
-// =============================================================================
 
 const APP_CONFIG = {
   FREE_DELIVERY_THRESHOLD: 1000, // ₹1,000 threshold for free delivery
@@ -29,10 +20,6 @@ const state = {
   },
   selectedCategory: 'ALL'
 };
-
-// =============================================================================
-// 2. DOM ELEMENT REFERENCES
-// =============================================================================
 
 const elements = {
   // Views & Navigation
@@ -119,29 +106,28 @@ const elements = {
 // Bootstrap Toast Instance
 const appToast = new bootstrap.Toast(elements.appToastEl, { delay: 3500 });
 
-// =============================================================================
 // 3. INITIALIZATION & URL HANDLING
-// =============================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
   initApp();
 });
 
-/**
- * Initializes app state, listens for URL params, loads stored user identity.
- */
+// Initializes app state, listens for URL params, loads stored user identity.
 function initApp() {
-  // 1. Restore previous username if saved in sessionStorage (or localStorage fallback)
+  // 1. Attach event listeners
+  setupEventListeners();
+
+  // 2. Restore previous username if saved in sessionStorage (or localStorage fallback)
   const savedUser = sessionStorage.getItem(APP_CONFIG.USER_NAME_KEY) || localStorage.getItem(APP_CONFIG.USER_NAME_KEY);
   if (savedUser) {
     state.currentUser = savedUser;
     elements.inputUserName.value = savedUser;
   }
 
-  // 2. Render recent rooms visited on this device
+  // 3. Render recent rooms visited on this device
   renderRecentRooms();
 
-  // 3. Check if URL has a room query param: e.g. index.html?room=CART-123
+  // 4. Check if URL has a room query param: e.g. index.html?room=CART-123
   const urlParams = new URLSearchParams(window.location.search);
   const roomParam = urlParams.get('room');
 
@@ -152,17 +138,11 @@ function initApp() {
     // If user already has a saved name, auto-join immediately!
     if (state.currentUser) {
       joinRoom(formattedCode);
-      return;
     }
   }
-
-  // 4. Attach event listeners
-  setupEventListeners();
 }
+// Wire up all user interactions, clicks, and form submissions.
 
-/**
- * Wire up all user interactions, clicks, and form submissions.
- */
 function setupEventListeners() {
   // Navigation
   elements.brandLink.addEventListener('click', (e) => {
@@ -284,14 +264,7 @@ function setupEventListeners() {
   window.addEventListener('storage', handleStorageEvent);
 }
 
-// =============================================================================
 // 4. USER IDENTITY & VALIDATION
-// =============================================================================
-
-/**
- * Validates the user name input.
- * Stores in sessionStorage for the current tab so Tab 1 and Tab 2 can have different names.
- */
 function validateUserName() {
   const name = elements.inputUserName.value.trim();
   if (!name) {
@@ -309,21 +282,15 @@ function validateUserName() {
   return true;
 }
 
-// =============================================================================
 // 5. ROOM CREATION, JOINING & PERSISTENCE
-// =============================================================================
 
-/**
- * Generates a random, memorable 6-character room code like "CART-842"
- */
 function generateRoomCode() {
   const randomNum = Math.floor(100 + Math.random() * 900); // 3 digits
   return `CART-${randomNum}`;
 }
 
-/**
- * Creates a brand new shopping room with default empty arrays.
- */
+//Creates a brand new shopping room with default empty arrays.
+
 function createRoom(roomCode) {
   const newRoom = {
     roomCode: roomCode,
@@ -345,9 +312,9 @@ function createRoom(roomCode) {
   showToast(`Room ${roomCode} created successfully!`, 'success');
 }
 
-/**
- * Joins an existing shopping room, or creates it if it doesn't exist yet.
- */
+
+// Joins an existing shopping room, or creates it if it doesn't exist yet.
+
 function joinRoom(roomCode) {
   let room = getRoomData(roomCode);
 
@@ -375,9 +342,8 @@ function joinRoom(roomCode) {
   showToast(`Joined room ${roomCode} as ${state.currentUser}!`, 'success');
 }
 
-/**
- * Switches views to the active room and updates UI badges.
- */
+// Switches views to the active room and updates UI badges.
+
 function enterRoom(roomCode, roomData) {
   state.currentRoomCode = roomCode;
   state.roomData = roomData;
@@ -407,9 +373,6 @@ function enterRoom(roomCode, roomData) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-/**
- * Exits the current room and returns to the welcome view.
- */
 function leaveRoom() {
   state.currentRoomCode = '';
   state.roomData = { roomCode: '', createdAt: null, items: [], activities: [] };
@@ -430,9 +393,9 @@ function leaveRoom() {
   showToast('Exited room to welcome screen.', 'info');
 }
 
-/**
- * Saves a room object to localStorage.
- */
+
+//Saves a room object to localStorage.
+
 function saveRoomData(room) {
   const key = APP_CONFIG.STORAGE_PREFIX + room.roomCode;
   try {
@@ -443,9 +406,8 @@ function saveRoomData(room) {
   }
 }
 
-/**
- * Retrieves a room object from localStorage.
- */
+// Retrieves a room object from localStorage.
+
 function getRoomData(roomCode) {
   const key = APP_CONFIG.STORAGE_PREFIX + roomCode;
   try {
@@ -511,13 +473,8 @@ function renderRecentRooms() {
   }
 }
 
-// =============================================================================
 // 6. CART OPERATIONS: ADD, EDIT QUANTITY, REMOVE, CLEAR
-// =============================================================================
 
-/**
- * Handles the Add Item form submission with validation.
- */
 function handleAddItemSubmit(e) {
   e.preventDefault();
 
@@ -663,13 +620,9 @@ function clearCart() {
   showToast('Shared cart has been cleared.', 'info');
 }
 
-// =============================================================================
 // 7. RENDERING: CART ITEMS, CALCULATIONS & PROGRESS BAR
-// =============================================================================
 
-/**
- * Master render function that updates all dynamic views in the active room.
- */
+
 function renderAll() {
   renderCartItems();
   updateCalculations();
@@ -877,13 +830,9 @@ function renderShopperContributions(shopperTotals) {
   });
 }
 
-// =============================================================================
 // 8. ACTIVITY LOG AUDIT SYSTEM
-// =============================================================================
 
-/**
- * Appends a new activity log entry to the room.
- */
+
 function logActivity(entry) {
   if (!state.roomData.activities) {
     state.roomData.activities = [];
@@ -943,14 +892,8 @@ function renderActivityLogs() {
   });
 }
 
-// =============================================================================
 // 9. MULTI-TAB SYNCHRONIZATION VIA BROWSER STORAGE EVENT
-// =============================================================================
 
-/**
- * Listens for the HTML5 window 'storage' event.
- * When Tab 1 writes to localStorage, Tab 2 gets this event automatically!
- */
 function handleStorageEvent(e) {
   if (!state.currentRoomCode) return;
 
@@ -977,13 +920,10 @@ function handleStorageEvent(e) {
   }
 }
 
-// =============================================================================
 // 10. RECEIPT GENERATION & PRINT MODAL
-// =============================================================================
 
-/**
- * Prepares and opens the printable receipt modal.
- */
+
+
 function openReceiptModal() {
   const items = state.roomData.items;
 
@@ -1126,14 +1066,10 @@ function fallbackCopy(text, successMessage) {
   }
   document.body.removeChild(textArea);
 }
-
-// =============================================================================
 // 12. HELPER UTILITY FUNCTIONS
-// =============================================================================
 
-/**
- * Formats a number to 2 decimal places with thousands separators.
- */
+
+
 function formatCurrency(num) {
   if (isNaN(num)) return '0.00';
   return Number(num).toLocaleString('en-IN', {

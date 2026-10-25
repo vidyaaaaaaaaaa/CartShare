@@ -442,7 +442,10 @@ main {
 .activity-timeline {
   max-height: 380px;
   overflow-y: auto;
-  padding-right: 4px;
+  overscroll-behavior: contain;
+  padding-right: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
 }
 
 .activity-timeline::-webkit-scrollbar {
